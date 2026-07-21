@@ -335,17 +335,20 @@ from fastapi import FastAPI, HTTPException, Query
 
 @app.get("/route")
 def get_route(
-    origin: str = Query(..., description="出発地"),
-    destination: str = Query(..., description="目的地")
+    origin: str,
+    destination: str
 ):
 
-    start_lat, start_lon = geocode(
-        origin
-    )
+    print(f"origin={origin}", flush=True)
+    print(f"destination={destination}", flush=True)
 
-    goal_lat, goal_lon = geocode(
-        destination
-    )
+    start_lat, start_lon = geocode(origin)
+
+    print(f"start={start_lat},{start_lon}", flush=True)
+
+    goal_lat, goal_lon = geocode(destination)
+
+    print(f"goal={goal_lat},{goal_lon}", flush=True)
 
     start_node, goal_node = get_nodes(
         G,
@@ -353,6 +356,11 @@ def get_route(
         start_lon,
         goal_lat,
         goal_lon
+    )
+
+    print(
+        f"start_node={start_node}, goal_node={goal_node}",
+        flush=True
     )
 
     ################################################
