@@ -317,11 +317,17 @@ def get_route(
 
     start_lat, start_lon = geocode(origin)
 
-    print(f"start={start_lat},{start_lon}", flush=True)
+    print(
+        f"start={start_lat},{start_lon}",
+        flush=True
+    )
 
     goal_lat, goal_lon = geocode(destination)
 
-    print(f"goal={goal_lat},{goal_lon}", flush=True)
+    print(
+        f"goal={goal_lat},{goal_lon}",
+        flush=True
+    )
 
     start_node, goal_node = get_nodes(
         G,
@@ -344,6 +350,7 @@ def get_route(
     routes = []
 
     try:
+
         for i, route in enumerate(
             nx.shortest_simple_paths(
                 G,
@@ -352,4 +359,37 @@ def get_route(
                 weight="length"
             )
         ):
-            routes.
+
+            routes.append(route)
+
+            print(
+                f"route {i + 1} found",
+                flush=True
+            )
+
+            if i >= 2:
+                break
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
+    result = {
+        "origin": origin,
+        "destination": destination
+    }
+
+    for i, route in enumerate(
+        routes,
+        start=1
+    ):
+
+        result[f"route{i}"] = build_result(
+            G,
+            route
+        )
+
+    return result
