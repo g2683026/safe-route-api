@@ -11,6 +11,12 @@ import json
 
 app = FastAPI()
 
+@app.get("/")
+def root():
+    return {
+        "message": "Safe Route API is running"
+    }
+
 ##################################################
 # 道路ネットワーク読込
 ##################################################
