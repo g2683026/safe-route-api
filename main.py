@@ -174,26 +174,42 @@ def get_nodes(
     goal_lon
 ):
 
+    transformer = Transformer.from_crs(
+        "EPSG:4326",
+        graph.graph["crs"],
+        always_xy=True
+    )
+
+    start_x, start_y = transformer.transform(
+        start_lon,
+        start_lat
+    )
+
+    goal_x, goal_y = transformer.transform(
+        goal_lon,
+        goal_lat
+    )
+
     print(
-        f"start input: {start_lon}, {start_lat}",
+        f"start projected: {start_x}, {start_y}",
         flush=True
     )
 
     print(
-        f"goal input: {goal_lon}, {goal_lat}",
+        f"goal projected: {goal_x}, {goal_y}",
         flush=True
     )
 
     start_node = ox.distance.nearest_nodes(
         graph,
-        start_lon,
-        start_lat
+        start_x,
+        start_y
     )
 
     goal_node = ox.distance.nearest_nodes(
         graph,
-        goal_lon,
-        goal_lat
+        goal_x,
+        goal_y
     )
 
     return start_node, goal_node
@@ -379,20 +395,6 @@ def get_route(
         f"start_node={start_node}, goal_node={goal_node}",
         flush=True
     )
-
-    if start_node == goal_node:
-
-        print(
-            "same start and goal node detected",
-            flush=True
-        )
-
-        return {
-            "message":
-                "start and destination resolved to same node",
-            "node":
-                start_node
-        }
 
     print("calculating shortest route", flush=True)
 
