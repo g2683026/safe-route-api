@@ -44,6 +44,8 @@ frames = []
 
 for incident_type, path in files.items():
 
+    print(f"Loading {incident_type}: {path}")
+
     gdf = gpd.read_file(path)
 
     if gdf.crs is None:
