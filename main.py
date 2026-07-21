@@ -331,11 +331,12 @@ def build_result(
 ##################################################
 # API
 ##################################################
+from fastapi import FastAPI, HTTPException, Query
 
 @app.get("/route")
 def get_route(
-    origin: str,
-    destination: str
+    origin: str = Query(..., description="出発地"),
+    destination: str = Query(..., description="目的地")
 ):
 
     start_lat, start_lon = geocode(
