@@ -302,6 +302,7 @@ def build_result(
             )
     }
 
+
 ##################################################
 # API
 ##################################################
@@ -343,53 +344,41 @@ def get_route(
     )
 
     print(
-        "calculating k shortest routes",
+        "calculating shortest route",
         flush=True
     )
 
-    routes = []
+    shortest_route = calculate_route(
+        G,
+        start_node,
+        goal_node,
+        "length"
+    )
 
-    try:
+    print(
+        "shortest route done",
+        flush=True
+    )
 
-        for i, route in enumerate(
-            nx.shortest_simple_paths(
-                G,
-                start_node,
-                goal_node,
-                weight="length"
-            )
-        ):
-
-            routes.append(route)
-
-            print(
-                f"route {i + 1} found",
-                flush=True
-            )
-
-            if i >= 2:
-                break
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
-
-    result = {
+    return {
         "origin": origin,
-        "destination": destination
+        "destination": destination,
+
+        "route1":
+            build_result(
+                G,
+                shortest_route
+            ),
+
+        "route2":
+            build_result(
+                G,
+                shortest_route
+            ),
+
+        "route3":
+            build_result(
+                G,
+                shortest_route
+            )
     }
-
-    for i, route in enumerate(
-        routes,
-        start=1
-    ):
-
-        result[f"route{i}"] = build_result(
-            G,
-            route
-        )
-
-    return result
