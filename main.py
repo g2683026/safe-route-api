@@ -174,6 +174,16 @@ def get_nodes(
     goal_lon
 ):
 
+    print(
+        f"start input: {start_lon}, {start_lat}",
+        flush=True
+    )
+
+    print(
+        f"goal input: {goal_lon}, {goal_lat}",
+        flush=True
+    )
+
     start_node = ox.distance.nearest_nodes(
         graph,
         start_lon,
