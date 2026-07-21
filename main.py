@@ -25,6 +25,8 @@ print("Loading road network...")
 
 G = ox.load_graphml("graph.graphml")
 
+print("GRAPH CRS:", G.graph.get("crs"), flush=True)
+
 ##################################################
 # インシデントデータ読込
 ##################################################
