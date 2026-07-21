@@ -129,7 +129,17 @@ def create_risk_graph(
     buffer_distance
 ):
 
+    print(
+        f"create_risk_graph buffer={buffer_distance}",
+        flush=True
+    )
+
     H = graph.copy()
+
+    print(
+        "graph copied",
+        flush=True
+    )
 
     edges = ox.graph_to_gdfs(
         H,
@@ -137,8 +147,18 @@ def create_risk_graph(
         edges=True
     )
 
+    print(
+        f"graph_to_gdfs done, edges={len(edges)}",
+        flush=True
+    )
+
     edges = edges.to_crs(
         epsg=3857
+    )
+
+    print(
+        "edges to_crs done",
+        flush=True
     )
 
     for idx, edge in edges.iterrows():
@@ -160,6 +180,11 @@ def create_risk_graph(
         u, v, k = idx
 
         H[u][v][k]["risk_cost"] = risk_cost
+
+    print(
+        "risk graph completed",
+        flush=True
+    )
 
     return H
 
