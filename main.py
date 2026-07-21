@@ -343,12 +343,11 @@ def get_route(
         flush=True
     )
 
-    print(
-        "calculating shortest route",
-        flush=True
-    )
+    ##################################################
+    # route1
+    ##################################################
 
-    shortest_route = calculate_route(
+    route1 = calculate_route(
         G,
         start_node,
         goal_node,
@@ -356,29 +355,33 @@ def get_route(
     )
 
     print(
-        "shortest route done",
+        "route1 done",
         flush=True
     )
 
-    return {
-        "origin": origin,
-        "destination": destination,
+    ##################################################
+    # route2
+    ##################################################
 
-        "route1":
-            build_result(
-                G,
-                shortest_route
-            ),
+    route2 = route1
 
-        "route2":
-            build_result(
-                G,
-                shortest_route
-            ),
+    try:
 
-        "route3":
-            build_result(
-                G,
-                shortest_route
-            )
-    }
+        G2 = G.copy()
+
+        if len(route1) >= 3:
+
+            mid = len(route1) // 2
+
+            u = route1[mid]
+            v = route1[mid + 1]
+
+            if G2.has_edge(u, v):
+
+                G2.remove_edges_from(
+                    list(
+                        G2.edges(
+                            u,
+                            v,
+                            keys=True
+             
