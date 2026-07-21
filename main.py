@@ -305,7 +305,6 @@ def build_result(
 ##################################################
 # API
 ##################################################
-from fastapi import FastAPI, HTTPException, Query
 
 @app.get("/route")
 def get_route(
@@ -337,36 +336,20 @@ def get_route(
         flush=True
     )
 
-    print("calculating shortest route", flush=True)
-
-    shortest_route = calculate_route(
-        G,
-        start_node,
-        goal_node,
-        "length"
+    print(
+        "calculating k shortest routes",
+        flush=True
     )
 
-    print("shortest route done", flush=True)
+    routes = []
 
-    return {
-        "origin": origin,
-        "destination": destination,
-
-        "route1":
-            build_result(
+    try:
+        for i, route in enumerate(
+            nx.shortest_simple_paths(
                 G,
-                shortest_route
-            ),
-
-        "route2":
-            build_result(
-                G,
-                shortest_route
-            ),
-
-        "route3":
-            build_result(
-                G,
-                shortest_route
+                start_node,
+                goal_node,
+                weight="length"
             )
-    }
+        ):
+            routes.
