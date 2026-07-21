@@ -25,6 +25,8 @@ print("Loading road network...")
 
 G = ox.load_graphml("graph.graphml")
 
+G = ox.project_graph(G)
+
 ##################################################
 # インシデントデータ読込
 ##################################################
