@@ -369,6 +369,21 @@ def get_route(
         f"start_node={start_node}, goal_node={goal_node}",
         flush=True
     )
+
+    if start_node == goal_node:
+
+        print(
+            "same start and goal node detected",
+            flush=True
+        )
+
+        return {
+            "message":
+                "start and destination resolved to same node",
+            "node":
+                start_node
+        }
+
     print("calculating shortest route", flush=True)
 
     ################################################
