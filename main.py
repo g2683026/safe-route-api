@@ -299,6 +299,11 @@ def build_result(
     route
 ):
 
+    print(
+        f"build_result route length={len(route)}",
+        flush=True
+    )
+
     rgdf = route_to_gdf(
         graph,
         route
@@ -364,6 +369,7 @@ def get_route(
         f"start_node={start_node}, goal_node={goal_node}",
         flush=True
     )
+    print("calculating shortest route", flush=True)
 
     ################################################
     # 最短ルート
@@ -376,14 +382,20 @@ def get_route(
         "length"
     )
 
+    print("shortest route done", flush=True)
+
     ################################################
     # 回避ルート
     ################################################
+    
+    print("creating medium graph", flush=True)
 
     medium_graph = create_risk_graph(
         G,
         50
     )
+
+    print("medium graph done", flush=True)
 
     avoid_route = calculate_route(
         medium_graph,
@@ -396,10 +408,14 @@ def get_route(
     # 高回避ルート
     ################################################
 
+    print("creating high graph", flush=True)
+
     high_graph = create_risk_graph(
         G,
         150
     )
+
+    print("creating high done", flush=True)
 
     avoid_high_route = calculate_route(
         high_graph,
