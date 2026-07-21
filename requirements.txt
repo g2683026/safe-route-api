@@ -8,4 +8,4 @@ pandas==2.3.3
 numpy==2.3.5
 shapely==2.1.2
 pyogrio==0.10.0
-pyproj==3.6.1
+pyproj==3.7.2
