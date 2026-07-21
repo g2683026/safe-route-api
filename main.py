@@ -6,6 +6,7 @@ import geopandas as gpd
 import pandas as pd
 
 from geopy.geocoders import Nominatim
+from pyproj import Transformer
 
 import json
 
