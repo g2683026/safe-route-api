@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "edited_tsuzuki_hittakuri2025_UTF8",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "罪名": "窃盗", "手口": "ひったくり", "発生年月日（始期）": "2025/1/8", "発生時（始期）": 18, "発生場所": "道路上", "被害者の性別": "男性", "被害者の年齢": "30歳代", "現金被害の有無": "あり", "都道府県（発生地）_1": "神奈川県", "市区町村（発生地）_1": "横浜市都筑区", "町丁目（発生地）_1": "佐江戸町", "経度": 139.5573, "緯度": 35.51651 }, "geometry": { "type": "Point", "coordinates": [ 139.5573, 35.51651 ] } }
+]
+}
