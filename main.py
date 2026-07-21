@@ -104,91 +104,6 @@ def geocode(place_name):
     )
 
 ##################################################
-# ペナルティ設定
-##################################################
-
-PENALTY = {
-
-    "snatch_theft": 3000,
-
-    "motorcycle_theft": 1000,
-
-    "bicycle_theft": 700,
-
-    "vendingmachine_theft": 300,
-
-    "traffic_accident": 1500
-}
-
-##################################################
-# リスク付きグラフ作成
-##################################################
-
-def create_risk_graph(
-    graph,
-    buffer_distance
-):
-
-    print(
-        f"create_risk_graph buffer={buffer_distance}",
-        flush=True
-    )
-
-    H = graph.copy()
-
-    print(
-        "graph copied",
-        flush=True
-    )
-
-    edges = ox.graph_to_gdfs(
-        H,
-        nodes=False,
-        edges=True
-    )
-
-    print(
-        f"graph_to_gdfs done, edges={len(edges)}",
-        flush=True
-    )
-
-    edges = edges.to_crs(
-        epsg=3857
-    )
-
-    print(
-        "edges to_crs done",
-        flush=True
-    )
-
-    for idx, edge in edges.iterrows():
-
-        risk_cost = edge["length"]
-
-        nearby = incident_gdf[
-            incident_gdf.distance(
-                edge.geometry
-            ) <= buffer_distance
-        ]
-
-        for _, incident in nearby.iterrows():
-
-            risk_cost += PENALTY[
-                incident["incident_type"]
-            ]
-
-        u, v, k = idx
-
-        H[u][v][k]["risk_cost"] = risk_cost
-
-    print(
-        "risk graph completed",
-        flush=True
-    )
-
-    return H
-
-##################################################
 # 出発ノード・到着ノード取得
 ##################################################
 
@@ -424,10 +339,6 @@ def get_route(
 
     print("calculating shortest route", flush=True)
 
-    ################################################
-    # 最短ルート
-    ################################################
-
     shortest_route = calculate_route(
         G,
         start_node,
@@ -437,71 +348,25 @@ def get_route(
 
     print("shortest route done", flush=True)
 
-    ################################################
-    # 回避ルート
-    ################################################
-    
-    print("creating medium graph", flush=True)
-
-    medium_graph = create_risk_graph(
-        G,
-        50
-    )
-
-    print("medium graph done", flush=True)
-
-    avoid_route = calculate_route(
-        medium_graph,
-        start_node,
-        goal_node,
-        "risk_cost"
-    )
-
-    ################################################
-    # 高回避ルート
-    ################################################
-
-    print("creating high graph", flush=True)
-
-    high_graph = create_risk_graph(
-        G,
-        150
-    )
-
-    print("creating high done", flush=True)
-
-    avoid_high_route = calculate_route(
-        high_graph,
-        start_node,
-        goal_node,
-        "risk_cost"
-    )
-
-    ################################################
-    # 返却
-    ################################################
-
     return {
-
         "origin": origin,
-
         "destination": destination,
 
-        "shortest":
+        "route1":
             build_result(
                 G,
                 shortest_route
             ),
 
-        "avoid":
+        "route2":
             build_result(
-                medium_graph,
-                avoid_route
+                G,
+                shortest_route
             ),
 
-        "avoid_high":
+        "route3":
             build_result(
-                high_graph,
-                avoid_high_route
+                G,
+                shortest_route
             )
     }
