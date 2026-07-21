@@ -5,6 +5,8 @@ G = ox.graph_from_place(
     network_type="walk"
 )
 
+G = ox.project_graph(G)
+
 ox.save_graphml(
     G,
     "graph.graphml"
