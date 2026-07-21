@@ -46,6 +46,9 @@ for incident_type, path in files.items():
 
     gdf = gpd.read_file(path)
 
+    if gdf.crs is None:
+        gdf.set_crs("EPSG:4326", inplace=True)
+
     gdf["incident_type"] = incident_type
 
     frames.append(gdf)
