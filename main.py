@@ -262,9 +262,50 @@ def to_geojson(
     route_gdf
 ):
 
+    route_gdf = route_gdf.to_crs(
+        epsg=4326
+    )
+
     return json.loads(
         route_gdf.to_json()
     )
+
+##################################################
+# 座標抽出
+##################################################
+
+def extract_coordinates(
+    route_gdf
+):
+
+    route_gdf = route_gdf.to_crs(
+        epsg=4326
+    )
+
+    coordinates = []
+
+    for geom in route_gdf.geometry:
+
+        if geom.geom_type == "LineString":
+
+            for lon, lat in geom.coords:
+
+                coordinates.append(
+                    [lat, lon]
+                )
+
+        elif geom.geom_type == "MultiLineString":
+
+            for line in geom.geoms:
+
+                for lon, lat in line.coords:
+
+                    coordinates.append(
+                        [lat, lon]
+                    )
+
+    return coordinates
+
 
 ##################################################
 # 結果生成
@@ -305,16 +346,17 @@ def build_result(
         "incident_breakdown":
             breakdown,
 
+        "coordinates":
+            extract_coordinates(
+                rgdf
+            ),
+
         "geojson":
             to_geojson(
                 rgdf
             )
     }
 
-
-##################################################
-# API
-##################################################
 ##################################################
 # API
 ##################################################
