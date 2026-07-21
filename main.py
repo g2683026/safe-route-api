@@ -306,6 +306,9 @@ def build_result(
 ##################################################
 # API
 ##################################################
+##################################################
+# API
+##################################################
 
 @app.get("/route")
 def get_route(
@@ -354,20 +357,16 @@ def get_route(
         "length"
     )
 
-    print(
-        "route1 done",
-        flush=True
-    )
+    print("route1 done", flush=True)
 
     ##################################################
     # route2
     ##################################################
 
     route2 = route1
+    G2 = G.copy()
 
     try:
-
-        G2 = G.copy()
 
         if len(route1) >= 3:
 
@@ -378,10 +377,115 @@ def get_route(
 
             if G2.has_edge(u, v):
 
+                edges_to_remove = []
+
+                for key in list(G2[u][v].keys()):
+                    edges_to_remove.append(
+                        (u, v, key)
+                    )
+
                 G2.remove_edges_from(
-                    list(
-                        G2.edges(
-                            u,
-                            v,
-                            keys=True
-             
+                    edges_to_remove
+                )
+
+        route2 = calculate_route(
+            G2,
+            start_node,
+            goal_node,
+            "length"
+        )
+
+        print("route2 done", flush=True)
+
+    except Exception as e:
+
+        print(
+            f"route2 fallback: {e}",
+            flush=True
+        )
+
+        route2 = route1
+
+    ##################################################
+    # route3
+    ##################################################
+
+    route3 = route2
+    G3 = G2.copy()
+
+    try:
+
+        if len(route2) >= 3:
+
+            mid = len(route2) // 2
+
+            u = route2[mid]
+            v = route2[mid + 1]
+
+            if G3.has_edge(u, v):
+
+                edges_to_remove = []
+
+                for key in list(G3[u][v].keys()):
+                    edges_to_remove.append(
+                        (u, v, key)
+                    )
+
+                G3.remove_edges_from(
+                    edges_to_remove
+                )
+
+        route3 = calculate_route(
+            G3,
+            start_node,
+            goal_node,
+            "length"
+        )
+
+        print("route3 done", flush=True)
+
+    except Exception as e:
+
+        print(
+            f"route3 fallback: {e}",
+            flush=True
+        )
+
+        route3 = route2
+
+    ##################################################
+    # route count
+    ##################################################
+
+    route_count = 1
+
+    if route2 != route1:
+        route_count = 2
+
+    if route3 != route2:
+        route_count = 3
+
+    ##################################################
+    # response
+    ##################################################
+
+    return {
+        "origin": origin,
+        "destination": destination,
+        "route_count": route_count,
+
+        "route1": build_result(
+            G,
+            route1
+        ),
+
+        "route2": build_result(
+            G,
+            route2
+        ),
+
+        "route3": build_result(
+            G,
+            route3
+        )
+    }
